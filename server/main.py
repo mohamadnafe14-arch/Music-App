@@ -1,16 +1,22 @@
-from fastapi  import FastAPI, Request 
+from fastapi  import FastAPI, HTTPException, Request 
 from pydantic import BaseModel
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import TEXT, VARCHAR, Column, LargeBinary, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+import uuid
+import bcrypt
+
+from database import User, UserCreate,db
 app = FastAPI()
-DATABASE_URL = "postgresql://postgres:medo2005#@localhost:5432/postgres5432/music_app"
-engine = create_engine(DATABASE_URL)
-sessionLocal=sessionmaker(autocommit=False, autoflush=False, bind=engine)
-db=sessionLocal()
-class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str
-@app.post("/")
+  
+@app.post("/signup")
 async def root(user: UserCreate):
-    return "The email of the user is: " + user.email + " and the password is: " + user.password + " and the name is: " + user.name
+  user_db = db.query(User).filter(User.email==user.email).first()
+  if   user_db:
+    raise HTTPException(400,"User with this email does not exist")
+  hased_password=bcrypt.hashpw(user.password.encode(),bcrypt.gensalt())
+  user_db=User(id=str(uuid.uuid4()),name=user.name,email=user.email,password=hased_password)
+  db.add(user_db)
+  db.commit()
+  db.refresh(user_db)
+
+  return user_db
