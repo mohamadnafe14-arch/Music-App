@@ -1,11 +1,8 @@
-from fastapi  import FastAPI, HTTPException, Request 
-from pydantic import BaseModel
-from sqlalchemy import TEXT, VARCHAR, Column, LargeBinary, create_engine
-from sqlalchemy.ext.declarative import declarative_base
 import uuid
 import bcrypt
-
-from database import User, UserCreate,db
+from fastapi import FastAPI, HTTPException
+from user_create import UserCreate
+from database import User,db
 app = FastAPI()
   
 @app.post("/signup")
