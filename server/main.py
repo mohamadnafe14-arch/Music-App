@@ -1,10 +1,10 @@
 import uuid
 import bcrypt
 from fastapi import FastAPI, HTTPException
+from models.user import User
 from user_create import UserCreate
-from database import User,db
+from database import db
 app = FastAPI()
-  
 @app.post("/signup")
 async def root(user: UserCreate):
   user_db = db.query(User).filter(User.email==user.email).first()
