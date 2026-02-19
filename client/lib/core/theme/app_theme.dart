@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppTheme {
   static final appTheme = ThemeData.dark().copyWith(
     scaffoldBackgroundColor: AppPalette.backgroundColor,
-    appBarTheme: AppBarTheme(backgroundColor: AppPalette.backgroundColor),
+    appBarTheme:const AppBarTheme(backgroundColor: AppPalette.backgroundColor),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
       enabledBorder: _border(),
