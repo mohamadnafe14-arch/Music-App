@@ -1,4 +1,4 @@
-from sqlalchemy import TEXT, VARCHAR, Column, LargeBinary
+from sqlalchemy import TEXT, VARCHAR, Column, LargeBinary # type: ignore
 from models.base import Base
 
 

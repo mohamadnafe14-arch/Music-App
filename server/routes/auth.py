@@ -1,10 +1,10 @@
 import uuid
-import bcrypt
-from fastapi import APIRouter, Depends, HTTPException
+import bcrypt # type: ignore
+from fastapi import APIRouter, Depends, HTTPException # type: ignore
 from database import get_db
-from routes.pydantic_schemas.user_create import UserCreate
+from pydantic_schemas.user_create import UserCreate
 from models.user import User
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session # type: ignore
 router=APIRouter()
 @router.post("/signup")
 async def signup(user: UserCreate,db: Session = Depends(get_db)):
