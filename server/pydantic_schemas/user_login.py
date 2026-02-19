@@ -1,6 +1,5 @@
-from models.base import Base
+from pydantic import BaseModel # type: ignore
 
-
-class UserLogin(Base):
-    username: str
+class UserLogin(BaseModel):
+    email: str
     password: str
