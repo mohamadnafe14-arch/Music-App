@@ -22,11 +22,6 @@ class _SignUpBodyState extends ConsumerState<SignUpBody> {
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider).isLoading;
     ref.listen(authViewModelProvider, (_, next) {
       next.when(
         data: (data) {
@@ -39,6 +34,11 @@ class _SignUpBodyState extends ConsumerState<SignUpBody> {
         loading: () {},
       );
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoading = ref.watch(authViewModelProvider).isLoading;
     return Form(
       key: formKey,
       child: Padding(

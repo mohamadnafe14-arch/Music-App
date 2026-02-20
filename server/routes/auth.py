@@ -1,4 +1,5 @@
 import uuid
+import jwt # type: ignore
 import bcrypt # type: ignore
 from fastapi import APIRouter, Depends, HTTPException # type: ignore
 from database import get_db
@@ -17,8 +18,8 @@ async def signup(user: UserCreate,db: Session = Depends(get_db)):
   db.add(user_db)
   db.commit()
   db.refresh(user_db)
-
-  return user_db
+  token = jwt.encode({"user_id":user_db.id}, "password_key")
+  return {"token":token,"user":user_db}
 @router.post("/login")
 async def login(user: UserLogin,db: Session = Depends(get_db)):
   user_db = db.query(User).filter(User.email==user.email).first()
@@ -26,4 +27,5 @@ async def login(user: UserLogin,db: Session = Depends(get_db)):
     raise HTTPException(400,"User with this email does not exist")
   if not bcrypt.checkpw(user.password.encode(),user_db.password):
     raise HTTPException(400,"Incorrect email or password")
-  return user_db
+  token = jwt.encode({"user_id":user_db.id}, "password_key")
+  return {"token":token,"user":user_db}

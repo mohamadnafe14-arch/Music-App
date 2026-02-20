@@ -20,7 +20,7 @@ class RemoteAuthRepo {
     );
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     if (response.statusCode == 200) {
-      return right(User.fromMap(data));
+      return right(User.fromMap(data['user']));
     } else {
       return left(
         Failure(message: data['detail'] ?? 'Something went wrong'),
