@@ -19,7 +19,6 @@ final remoteAuthRepoProvider = AutoDisposeProvider<RemoteAuthRepo>.internal(
   dependencies: null,
   allTransitiveDependencies: null,
 );
-
 // ignore: deprecated_member_use
 typedef RemoteAuthRepoRef = AutoDisposeProviderRef<RemoteAuthRepo>;
 // ignore_for_file: type=lint

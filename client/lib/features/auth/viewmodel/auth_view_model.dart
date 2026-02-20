@@ -1,4 +1,5 @@
 import 'package:client/features/auth/model/user.dart';
+import 'package:client/features/auth/repos/auth_local_repo.dart';
 import 'package:client/features/auth/repos/remote_auth_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,6 +8,7 @@ part 'auth_view_model.g.dart';
 @riverpod
 class AuthViewModel extends _$AuthViewModel {
   late RemoteAuthRepo remoteAuthRepo;
+  late AuthLocalRepo authLocalRepo;
   @override
   AsyncValue<User?> build() {
     remoteAuthRepo = ref.watch(remoteAuthRepoProvider);
@@ -35,4 +37,5 @@ class AuthViewModel extends _$AuthViewModel {
       state = AsyncValue.data(r);
     });
   }
+
 }
