@@ -1,5 +1,5 @@
 import 'package:client/core/theme/app_theme.dart';
-import 'package:client/features/auth/view/sign_in_view.dart';
+import 'package:client/core/utils/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,9 +16,9 @@ class MusicApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) => MaterialApp(
+      builder: (context, child) => MaterialApp.router(
+        routerConfig: AppRouter.router,
         theme: AppTheme.appTheme,
-        home: const SignInView(),
         debugShowCheckedModeBanner: false,
       ),
     );

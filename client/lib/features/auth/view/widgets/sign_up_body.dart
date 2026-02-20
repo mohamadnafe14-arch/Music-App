@@ -1,17 +1,22 @@
+import 'package:client/core/utils/show_snack_bar.dart';
 import 'package:client/features/auth/view/widgets/auth_button.dart';
 import 'package:client/features/auth/view/widgets/auth_text_form_field.dart';
 import 'package:client/features/auth/view/widgets/custom_text_button.dart';
+import 'package:client/features/auth/viewmodel/auth_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-class SignUpBody extends StatefulWidget {
-  const SignUpBody({super.key, required this.goToBlogPage});
-  final VoidCallback goToBlogPage;
+class SignUpBody extends ConsumerStatefulWidget {
+  const SignUpBody({
+    super.key,
+  });
   @override
-  State<SignUpBody> createState() => _SignUpBodyState();
+  ConsumerState<SignUpBody> createState() => _SignUpBodyState();
 }
 
-class _SignUpBodyState extends State<SignUpBody> {
+class _SignUpBodyState extends ConsumerState<SignUpBody> {
   late GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? name, email, password;
   @override
@@ -21,6 +26,19 @@ class _SignUpBodyState extends State<SignUpBody> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authViewModelProvider).isLoading;
+    ref.listen(authViewModelProvider, (_, next) {
+      next.when(
+        data: (data) {
+          showSnackBar(context, "Signed up successfully");
+        },
+        error: (error, stackTrace) => showSnackBar(
+          context,
+          error.toString(),
+        ),
+        loading: () {},
+      );
+    });
     return Form(
       key: formKey,
       child: Padding(
@@ -82,12 +100,24 @@ class _SignUpBodyState extends State<SignUpBody> {
                 },
               ),
               SizedBox(height: 20.h),
-              AuthButton(onPressed: () {}, text: 'Sign Up', isLoading: false),
+              AuthButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    formKey.currentState!.save();
+                    ref.read(authViewModelProvider.notifier).signUp(
+                        email: email!, password: password!, name: name!);
+                  }
+                },
+                text: 'Sign Up',
+                isLoading: isLoading,
+              ),
               SizedBox(height: 20.h),
               CustomTextButton(
                 firstText: "Already have an account?",
                 btnText: "Sign In",
-                onTap: () {},
+                onTap: () {
+                  GoRouter.of(context).pop();
+                },
               ),
             ],
           ),

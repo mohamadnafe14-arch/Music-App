@@ -7,8 +7,10 @@ import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'remote_auth_repo.g.dart';
+
 @riverpod
 RemoteAuthRepo remoteAuthRepo(RemoteAuthRepoRef ref) => RemoteAuthRepo();
+
 class RemoteAuthRepo {
   Future<Either<Failure, User>> signIn(String email, String password) async {
     final response = await http.post(
@@ -20,7 +22,9 @@ class RemoteAuthRepo {
     if (response.statusCode == 200) {
       return right(User.fromMap(data));
     } else {
-      return left(Failure(message: data['details']));
+      return left(
+        Failure(message: data['detail'] ?? 'Something went wrong'),
+      );
     }
   }
 
@@ -38,7 +42,9 @@ class RemoteAuthRepo {
     if (response.statusCode == 201) {
       return right(User.fromMap(data));
     } else {
-      return left(Failure(message: data['details']));
+      return left(
+        Failure(message: data['detail'] ?? 'Something went wrong'),
+      );
     }
   }
 }

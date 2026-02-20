@@ -1,4 +1,3 @@
-
 import 'package:client/features/auth/view/widgets/sign_in_body.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +6,6 @@ class SignInView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: SignInBody(
-      gotoBlogPage: () {
-      },
-    )));
+    return const SafeArea(child: Scaffold(body: SignInBody()));
   }
 }
