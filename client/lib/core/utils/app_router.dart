@@ -2,6 +2,7 @@ import 'package:client/features/auth/view/sign_in_view.dart';
 import 'package:client/features/auth/view/sign_up_view.dart';
 import 'package:client/features/auth/view/splash_view.dart';
 import 'package:client/features/home/view/home_view.dart';
+import 'package:client/features/home/view/upload_song_view.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRouter {
@@ -9,6 +10,7 @@ abstract class AppRouter {
   static const String signInView = '/signInView';
   static const String signUpView = '/signUpView';
   static const String homeView = '/homeView';
+  static const String uploadSongView = '/uploadSongView';
   static final router = GoRouter(
     routes: [
       GoRoute(
@@ -26,6 +28,10 @@ abstract class AppRouter {
       GoRoute(
         path: homeView,
         builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: uploadSongView,
+        builder: (context, state) => const UploadSongView(),
       ),
     ],
   );
