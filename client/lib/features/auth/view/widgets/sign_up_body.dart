@@ -1,3 +1,4 @@
+import 'package:client/core/utils/app_router.dart';
 import 'package:client/core/utils/show_snack_bar.dart';
 import 'package:client/features/auth/view/widgets/auth_button.dart';
 import 'package:client/features/auth/view/widgets/auth_text_form_field.dart';
@@ -22,10 +23,11 @@ class _SignUpBodyState extends ConsumerState<SignUpBody> {
   @override
   void initState() {
     super.initState();
-    ref.listen(authViewModelProvider, (_, next) {
+    ref.listenManual(authViewModelProvider, (_, next) {
       next.when(
         data: (data) {
           showSnackBar(context, "Signed up successfully");
+          GoRouter.of(context).go(AppRouter.homeView);
         },
         error: (error, stackTrace) => showSnackBar(
           context,

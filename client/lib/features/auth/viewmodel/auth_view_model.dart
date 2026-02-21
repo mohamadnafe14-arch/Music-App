@@ -5,22 +5,24 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_view_model.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AuthViewModel extends _$AuthViewModel {
   late RemoteAuthRepo remoteAuthRepo;
   late AuthLocalRepo authLocalRepo;
   @override
   AsyncValue<User?> build() {
     remoteAuthRepo = ref.watch(remoteAuthRepoProvider);
+    authLocalRepo = ref.watch(authLocalRepoProvider);
     return const AsyncValue.data(null);
   }
 
   Future<void> signIn({required String email, required String password}) async {
     state = const AsyncLoading();
     final result = await remoteAuthRepo.signIn(email, password);
-    result.fold((l) {
+    result.match((l) {
       state = AsyncValue.error(l.message, StackTrace.current);
-    }, (r) {
+    }, (r) async {
+      await authLocalRepo.saveToken(r.token);
       state = AsyncValue.data(r);
     });
   }
@@ -31,19 +33,28 @@ class AuthViewModel extends _$AuthViewModel {
       required String name}) async {
     state = const AsyncLoading();
     final result = await remoteAuthRepo.signUp(email, password, name);
-    result.fold((l) {
-      state = AsyncValue.error(l, StackTrace.current);
-    }, (r) {
-      authLocalRepo.saveToken(r.token);
+    result.match((l) {
+      state = AsyncValue.error(l.message, StackTrace.current);
+    }, (r) async {
+      await authLocalRepo.saveToken(r.token);
       state = AsyncValue.data(r);
     });
   }
-  Future<User?> getUser() async{
+
+  Future<void> getUser() async {
+    state = const AsyncLoading();
     final token = await authLocalRepo.getToken();
-    if(token != null) {
-      state = const AsyncValue.data(null);
-    }
+    final result = await remoteAuthRepo.getCurrentUser(token: token);
+    result.fold(
+      (l) {
+        state = AsyncValue.error(l.message, StackTrace.current);
+      },
+      (r) {
+        state = AsyncValue.data(r);
+      },
+    );
   }
+
   Future<void> initSharedPref() async {
     await authLocalRepo.init();
   }

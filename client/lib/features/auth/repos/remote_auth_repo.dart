@@ -44,7 +44,33 @@ class RemoteAuthRepo {
     );
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     if (response.statusCode == 201) {
-      return right(User.fromMap(data));
+      return right(
+        User.fromMap(data['user']).copyWith(
+          token: data['token'],
+        ),
+      );
+    } else {
+      return left(
+        Failure(message: data['detail'] ?? 'Something went wrong'),
+      );
+    }
+  }
+
+  Future<Either<Failure, User>> getCurrentUser({required String? token}) async {
+    final response = await http.get(
+      Uri.parse('$kBaseUrl/auth/'),
+      headers: {
+        'Content-Type': 'application/json',
+        "x-auth-token": token ?? "",
+      },
+    );
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    if (response.statusCode == 200) {
+      return right(
+        User.fromMap(data).copyWith(
+          token: token,
+        ),
+      );
     } else {
       return left(
         Failure(message: data['detail'] ?? 'Something went wrong'),

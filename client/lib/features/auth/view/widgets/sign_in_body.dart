@@ -24,18 +24,22 @@ class _SignInBodyState extends ConsumerState<SignInBody> {
   @override
   void initState() {
     formKey = GlobalKey<FormState>();
-        ref.listenManual(authViewModelProvider, (_, next) {
-      next.when(
-        data: (data) {
-          showSnackBar(context, "Signed in successfully");
-        },
-        error: (error, stackTrace) => showSnackBar(
-          context,
-          error.toString(),
-        ),
-        loading: () {},
-      );
-    });
+    ref.listenManual(
+      authViewModelProvider,
+      (_, next) {
+        next.when(
+          data: (data) {
+            showSnackBar(context, "Signed in successfully");
+            GoRouter.of(context).go(AppRouter.homeView);
+          },
+          error: (error, stackTrace) => showSnackBar(
+            context,
+            error.toString(),
+          ),
+          loading: () {},
+        );
+      },
+    );
     super.initState();
   }
 
