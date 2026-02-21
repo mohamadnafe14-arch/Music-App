@@ -34,8 +34,17 @@ class AuthViewModel extends _$AuthViewModel {
     result.fold((l) {
       state = AsyncValue.error(l, StackTrace.current);
     }, (r) {
+      authLocalRepo.saveToken(r.token);
       state = AsyncValue.data(r);
     });
   }
-
+  Future<User?> getUser() async{
+    final token = await authLocalRepo.getToken();
+    if(token != null) {
+      state = const AsyncValue.data(null);
+    }
+  }
+  Future<void> initSharedPref() async {
+    await authLocalRepo.init();
+  }
 }
