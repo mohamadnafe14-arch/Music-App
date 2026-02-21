@@ -1,3 +1,4 @@
+import 'package:client/core/provider/current_user_provider.dart';
 import 'package:client/features/auth/model/user.dart';
 import 'package:client/features/auth/repos/auth_local_repo.dart';
 import 'package:client/features/auth/repos/remote_auth_repo.dart';
@@ -9,10 +10,12 @@ part 'auth_view_model.g.dart';
 class AuthViewModel extends _$AuthViewModel {
   late RemoteAuthRepo remoteAuthRepo;
   late AuthLocalRepo authLocalRepo;
+  late CurrentUser currentUser;
   @override
   AsyncValue<User?> build() {
     remoteAuthRepo = ref.watch(remoteAuthRepoProvider);
     authLocalRepo = ref.watch(authLocalRepoProvider);
+    currentUser = ref.watch(currentUserProvider.notifier);
     return const AsyncValue.data(null);
   }
 
@@ -50,6 +53,7 @@ class AuthViewModel extends _$AuthViewModel {
         state = AsyncValue.error(l.message, StackTrace.current);
       },
       (r) {
+        ref.read(currentUserProvider.notifier).setCurrentUser(r);
         state = AsyncValue.data(r);
       },
     );
